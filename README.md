@@ -24,7 +24,7 @@ convert_min_sec_to_sec <- function(xs) {
     strsplit(split = ":", fixed = TRUE) |> 
     lapply(function(x) {
       x <- as.numeric(x)
-      60 * x[[1]] + x[[2]]
+      60 * x[1] + x[2]
     }) |> 
     unlist(use.names = FALSE)
 }
