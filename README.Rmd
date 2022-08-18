@@ -21,6 +21,101 @@ knitr::opts_chunk$set(
 
 A dumping ground for some of my fitness data.
 
+## exercise-minutes
+
+I exported all of my Apple Health data. The export process provides a .zip file.
+I opened the `export.xml` file in the .zip archive and extracted my daily
+exercise minutes (the green ring) activity using the following:
+
+```{r}
+#| eval: false
+library(tidyverse)
+
+# Get all nodes in the document with summary
+nodes_summary <- xml2::read_xml("C:/Users/trist/Desktop/export.xml") |> 
+  xml2::xml_find_all(".//ActivitySummary") 
+
+# Get the attributes in each node and create a dataframe from them
+nodes_summary |> 
+  xml2::xml_attrs() |>
+  lapply(as.list) |> 
+  lapply(as.data.frame) |> 
+  bind_rows() |> 
+  as_tibble() |> 
+  # I got my first Apple Watch around Christmas 2018
+  filter(dateComponents > "2018-12-19") |> 
+  select(
+    date = dateComponents,
+    exercise_minutes = appleExerciseTime
+  ) |> 
+  type_convert(
+    col_types = cols(
+      date = col_date(format = ""),
+      exercise_minutes = col_double(),
+    )
+  ) |>
+  write_csv("data/exercise-minutes.csv")
+```
+
+Now, I have my exercise minutes for each day.
+
+```{r exercise-minutes}
+library(tidyverse)
+
+data_minutes <- "data/exercise-minutes.csv" |> 
+  # I added entries with Excel and it mangled the dates
+  read_csv(
+    col_types = cols(
+      date = col_date("%m/%d/%Y"), 
+      exercise_minutes = "i")
+  ) |> 
+  # in case i want to aggregate by months within years
+  mutate(
+    year = lubridate::year(date),
+    month = lubridate::month(date),
+    year_month = paste0(year, month)
+  ) |> 
+  group_by(year_month) |> 
+  mutate(
+    year_month_start = min(date)
+  ) |> 
+  ungroup()
+
+ggplot(data_minutes |> filter(year > 2018)) + 
+  aes(x = date, y = exercise_minutes) + 
+  geom_hline(
+    yintercept = 30, 
+    color = "darkgreen", 
+    size = 1, 
+    linetype = "dashed"
+  ) +
+  geom_point(alpha = .4) +
+  facet_wrap("year", scales = "free") + 
+  stat_smooth(method = "loess", formula = y ~ x)
+```
+
+What is my exercise debt (unmet goal minutes)?
+
+```{r}
+data_minutes |> 
+  group_by(year) |> 
+  summarise(
+    n_days = n(),
+    mean_exercise = mean(exercise_minutes),
+    exercise = sum(exercise_minutes),
+    debt = sum(30 - exercise_minutes)
+  )
+
+data_minutes |> 
+  summarise(
+    n_days = n(),
+    mean_exercise = mean(exercise_minutes),
+    exercise = sum(exercise_minutes),
+    debt = sum(30 - exercise_minutes)
+  )
+```
+
+
 ## intervals
 
   - Run some distance as fast as you can (time it), stop and recover until
