@@ -101,7 +101,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    229          36.2     8300 -1430
+#> 5  2022    230          36.4     8381 -1481
 
 data_minutes |> 
   summarise(
@@ -113,7 +113,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1337          27.1    36168  3942
+#> 1   1338          27.1    36249  3891
 ```
 
 ## intervals
@@ -160,7 +160,7 @@ d |>
     total_run_time = sum(time),
     .groups = "drop"
   )
-#> # A tibble: 10 × 4
+#> # A tibble: 15 × 4
 #>    date       distance intervals total_run_time
 #>    <date>     <chr>        <int>          <dbl>
 #>  1 2022-07-28 [all]            7           1232
@@ -173,21 +173,30 @@ d |>
 #>  8 2022-08-16 400              2            257
 #>  9 2022-08-16 600              2            399
 #> 10 2022-08-16 800              2            475
+#> 11 2022-08-19 [all]            7           1166
+#> 12 2022-08-19 200              1             51
+#> 13 2022-08-19 400              2            251
+#> 14 2022-08-19 600              2            382
+#> 15 2022-08-19 800              2            482
 
-d |> 
+d_date_margins <- d |> 
   group_by(date, interval_type) |> 
   summarise(
     intervals = n(),
     total_time = sum(time),
+    distance = sum(as.numeric(distance)),
     .groups = "drop"
   )
-#> # A tibble: 4 × 4
-#>   date       interval_type intervals total_time
-#>   <date>     <chr>             <int>      <dbl>
-#> 1 2022-07-28 recover               7        778
-#> 2 2022-07-28 run                   7       1232
-#> 3 2022-08-16 recover               7       1231
-#> 4 2022-08-16 run                   7       1181
+d_date_margins
+#> # A tibble: 6 × 5
+#>   date       interval_type intervals total_time distance
+#>   <date>     <chr>             <int>      <dbl>    <dbl>
+#> 1 2022-07-28 recover               7        778     3800
+#> 2 2022-07-28 run                   7       1232     3800
+#> 3 2022-08-16 recover               7       1231     3800
+#> 4 2022-08-16 run                   7       1181     3800
+#> 5 2022-08-19 recover               7        794     3800
+#> 6 2022-08-19 run                   7       1166     3800
 
 d |> 
   filter(interval_type == "run") |> 
@@ -206,10 +215,55 @@ d |>
       hjust = .5,
       stat = "unique"
     ) +
-    labs(x = "running interval number", y = "pace (min per km)", color = "date")
+    geom_label(
+      aes(label = label, y = 3.5),
+      data = data.frame(interval_number = 15, label = "(all)"),
+      hjust = .5,
+    ) +
+    geom_point(
+      aes(color = factor(date)), 
+      data = d_date_margins |> 
+        filter(interval_type == "run") |> 
+        mutate(interval_number = 15) |> 
+        rename(time = total_time),
+    ) +
+    labs(
+      x = "running interval number", 
+      y = "pace [min per km] (lower: better)", 
+      color = "date"
+    )
 ```
 
 ![](README_files/figure-gfm/intervals-1.png)<!-- -->
+
+``` r
+
+d |> 
+  filter(interval_type == "recover") |> 
+  ggplot() + 
+    aes(
+      x = (interval_number + 1) / 2, 
+      y = time
+    ) +
+    geom_line(aes(group = date, color = factor(date))) +
+    geom_point(aes(color = factor(date))) +
+    geom_label(
+      aes(
+        label = paste0(distance, " m"), 
+        y = 45
+      ), 
+      hjust = .5,
+      stat = "unique"
+    ) +
+    labs(
+      x = "running interval number", 
+      y = "recovery duration [s] (lower: better)", 
+      color = "date",
+      caption = "I used a different workout app on 2022-08-16 🤷‍♀️"
+    )
+```
+
+![](README_files/figure-gfm/intervals-2.png)<!-- -->
 
 ## bodyweight
 
@@ -227,11 +281,10 @@ lbs).
   ggplot() + 
   aes(x = date, y = weight) + 
   ylim(250, 270) + 
-  stat_smooth() +
+  stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
   theme_grey(base_size = 16) +
   labs(y = "bodyweight [lb]")
-#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
 ![](README_files/figure-gfm/bodyweight-1.png)<!-- -->

@@ -160,13 +160,15 @@ d |>
     .groups = "drop"
   )
 
-d |> 
+d_date_margins <- d |> 
   group_by(date, interval_type) |> 
   summarise(
     intervals = n(),
     total_time = sum(time),
+    distance = sum(as.numeric(distance)),
     .groups = "drop"
   )
+d_date_margins
 
 d |> 
   filter(interval_type == "run") |> 
@@ -185,7 +187,47 @@ d |>
       hjust = .5,
       stat = "unique"
     ) +
-    labs(x = "running interval number", y = "pace (min per km)", color = "date")
+    geom_label(
+      aes(label = label, y = 3.5),
+      data = data.frame(interval_number = 15, label = "(all)"),
+      hjust = .5,
+    ) +
+    geom_point(
+      aes(color = factor(date)), 
+      data = d_date_margins |> 
+        filter(interval_type == "run") |> 
+        mutate(interval_number = 15) |> 
+        rename(time = total_time),
+    ) +
+    labs(
+      x = "running interval number", 
+      y = "pace [min per km] (lower: better)", 
+      color = "date"
+    )
+
+d |> 
+  filter(interval_type == "recover") |> 
+  ggplot() + 
+    aes(
+      x = (interval_number + 1) / 2, 
+      y = time
+    ) +
+    geom_line(aes(group = date, color = factor(date))) +
+    geom_point(aes(color = factor(date))) +
+    geom_label(
+      aes(
+        label = paste0(distance, " m"), 
+        y = 45
+      ), 
+      hjust = .5,
+      stat = "unique"
+    ) +
+    labs(
+      x = "running interval number", 
+      y = "recovery duration [s] (lower: better)", 
+      color = "date",
+      caption = "I used a different workout app on 2022-08-16 🤷‍♀️"
+    )
 ```
 
 ## bodyweight
@@ -203,7 +245,7 @@ pre-pandemic bodyweight (250 lbs).
   ggplot() + 
   aes(x = date, y = weight) + 
   ylim(250, 270) + 
-  stat_smooth() +
+  stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
   theme_grey(base_size = 16) +
   labs(y = "bodyweight [lb]")
