@@ -101,7 +101,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    233          36.8     8581 -1591
+#> 5  2022    235          37.0     8692 -1642
 
 data_minutes |> 
   summarise(
@@ -113,7 +113,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1341          27.2    36449  3781
+#> 1   1343          27.2    36560  3730
 ```
 
 ## intervals
@@ -288,3 +288,24 @@ lbs).
 ```
 
 ![](README_files/figure-gfm/bodyweight-1.png)<!-- -->
+
+``` r
+
+last_plot() + 
+  geom_vline(
+    data = NULL,
+    linetype = "dotted",
+    xintercept = as.Date("2022-04-24")
+  ) +
+  annotate(
+    "text",
+    # data = NULL,
+    label = "Started taking boxing classes in late April 🥊",
+    x = as.Date("2022-04-24"),
+    hjust = -.05,
+    y = 270,
+    size = 4
+  )
+```
+
+![](README_files/figure-gfm/bodyweight-2.png)<!-- -->

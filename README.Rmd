@@ -249,5 +249,21 @@ pre-pandemic bodyweight (250 lbs).
   geom_point() +
   theme_grey(base_size = 16) +
   labs(y = "bodyweight [lb]")
+
+last_plot() + 
+  geom_vline(
+    data = NULL,
+    linetype = "dotted",
+    xintercept = as.Date("2022-04-24")
+  ) +
+  annotate(
+    "text",
+    # data = NULL,
+    label = "Started taking boxing classes in late April 🥊",
+    x = as.Date("2022-04-24"),
+    hjust = -.05,
+    y = 270,
+    size = 4
+  )
 ```
 
