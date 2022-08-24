@@ -276,36 +276,101 @@ weight goals besides getting back to my pre-pandemic bodyweight (250
 lbs).
 
 ``` r
-"data/bodyweight.csv" |> 
-  read_csv(col_types = cols(date = col_date("%m/%d/%Y"))) |> 
+data_weight <- "data/bodyweight.csv" |> 
+  read_csv(col_types = cols(date = col_date("%m/%d/%Y"))) 
+
+p <- data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
   ylim(250, 270) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
   theme_grey(base_size = 16) +
-  labs(y = "bodyweight [lb]")
+  labs(y = "bodyweight [lb]") 
+
+p
 ```
 
 ![](README_files/figure-gfm/bodyweight-1.png)<!-- -->
 
 ``` r
 
-last_plot() + 
+library(ggrepel)
+
+p + 
   geom_vline(
     data = NULL,
     linetype = "dotted",
     xintercept = as.Date("2022-04-24")
   ) +
-  annotate(
-    "text",
-    # data = NULL,
+  geom_text_repel(
+    data = data.frame(
+      date = as.Date("2022-04-25"),
+      weight = 269
+    ),
+    nudge_y = .5,
+    point.padding = 0.2,
+    segment.curvature = 1e-20,
+    xlim = c(as.Date("2022-04-30"), NA),
     label = "Started taking boxing classes in late April 🥊",
-    x = as.Date("2022-04-24"),
-    hjust = -.05,
-    y = 270,
-    size = 4
+    size = 5
+  ) +
+  geom_text_repel(
+    data = data.frame(
+      date = as.Date("2022-04-26"),
+      weight = 250
+    ),
+    nudge_y = 1,
+    point.padding = 0.5,
+    segment.curvature = 1e-20,
+    xlim = c(as.Date("2022-04-30"), NA),
+    label = "Pre-pandemic weight was around 250 lbs",
+    size = 5
+  )  + 
+  geom_blank(
+    aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
   )
 ```
 
 ![](README_files/figure-gfm/bodyweight-2.png)<!-- -->
+
+``` r
+  
+  
+p2 <- last_plot()
+
+p3 <- ggplot(data_minutes |> filter(date > as.Date("2022-01-01"))) + 
+  aes(x = date, y = exercise_minutes) + 
+  geom_hline(
+    yintercept = 30, 
+    color = "darkgreen", 
+    size = 1, 
+    linetype = "dashed"
+  ) +
+  geom_point(alpha = .4) +
+  stat_smooth(method = "loess", formula = y ~ x) +
+  labs(y = "Exercise minutes ⌚") + 
+  theme_grey(base_size = 16) + 
+  geom_vline(
+    data = NULL,
+    linetype = "dotted",
+    xintercept = as.Date("2022-04-24")
+  ) +
+  geom_blank(
+    aes(x = max(c(data_minutes$date, data_weight$date)), y = 30),
+  )
+```
+
+``` r
+library(patchwork)
+p2 + p3 + plot_layout(nrow = 2) 
+```
+
+![](README_files/figure-gfm/bodyweight2-1.png)<!-- -->
+
+``` r
+
+plot_spacer() + p3 + inset_element(p2, left = 0.4, bottom = 1, right = 1, top = 1.8, align_to = "full") + plot_layout(nrow = 2)
+```
+
+![](README_files/figure-gfm/bodyweight2-2.png)<!-- -->
