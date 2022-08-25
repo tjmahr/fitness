@@ -101,7 +101,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    235          37.0     8692 -1642
+#> 5  2022    236          37.3     8797 -1717
 
 data_minutes |> 
   summarise(
@@ -113,7 +113,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1343          27.2    36560  3730
+#> 1   1344          27.3    36665  3655
 ```
 
 ## intervals
@@ -160,7 +160,7 @@ d |>
     total_run_time = sum(time),
     .groups = "drop"
   )
-#> # A tibble: 15 × 4
+#> # A tibble: 20 × 4
 #>    date       distance intervals total_run_time
 #>    <date>     <chr>        <int>          <dbl>
 #>  1 2022-07-28 [all]            7           1232
@@ -178,6 +178,11 @@ d |>
 #> 13 2022-08-19 400              2            251
 #> 14 2022-08-19 600              2            382
 #> 15 2022-08-19 800              2            482
+#> 16 2022-08-25 [all]            7           1156
+#> 17 2022-08-25 200              1             52
+#> 18 2022-08-25 400              2            253
+#> 19 2022-08-25 600              2            391
+#> 20 2022-08-25 800              2            460
 
 d_date_margins <- d |> 
   group_by(date, interval_type) |> 
@@ -188,7 +193,7 @@ d_date_margins <- d |>
     .groups = "drop"
   )
 d_date_margins
-#> # A tibble: 6 × 5
+#> # A tibble: 8 × 5
 #>   date       interval_type intervals total_time distance
 #>   <date>     <chr>             <int>      <dbl>    <dbl>
 #> 1 2022-07-28 recover               7        778     3800
@@ -197,6 +202,8 @@ d_date_margins
 #> 4 2022-08-16 run                   7       1181     3800
 #> 5 2022-08-19 recover               7        794     3800
 #> 6 2022-08-19 run                   7       1166     3800
+#> 7 2022-08-25 recover               7        904     3800
+#> 8 2022-08-25 run                   7       1156     3800
 
 d |> 
   filter(interval_type == "run") |> 
