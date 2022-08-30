@@ -101,7 +101,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    236          37.3     8797 -1717
+#> 5  2022    241          37.7     9083 -1853
 
 data_minutes |> 
   summarise(
@@ -113,13 +113,13 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1344          27.3    36665  3655
+#> 1   1349          27.4    36951  3519
 ```
 
 ## intervals
 
 -   Run some distance as fast as you can (time it), stop and recover
-    until heartrate is 140 bpm.
+    until heartrate is 140 bpm (time how long the recovery takes).
 -   Do this for the following distances (m): 800, 800, 600, 600, 400,
     400, 200.
 
@@ -150,40 +150,6 @@ d <- "data/intervals.csv" |>
     time = convert_min_sec_to_sec(time)
   )
 
-d |> 
-  # Include all distances aggregated together as "[all]"
-  bind_rows(d |> mutate(distance = "[all]")) |> 
-  filter(interval_type == "run") |> 
-  group_by(date, distance) |> 
-  summarise(
-    intervals = n(),
-    total_run_time = sum(time),
-    .groups = "drop"
-  )
-#> # A tibble: 20 × 4
-#>    date       distance intervals total_run_time
-#>    <date>     <chr>        <int>          <dbl>
-#>  1 2022-07-28 [all]            7           1232
-#>  2 2022-07-28 200              1             57
-#>  3 2022-07-28 400              2            263
-#>  4 2022-07-28 600              2            411
-#>  5 2022-07-28 800              2            501
-#>  6 2022-08-16 [all]            7           1181
-#>  7 2022-08-16 200              1             50
-#>  8 2022-08-16 400              2            257
-#>  9 2022-08-16 600              2            399
-#> 10 2022-08-16 800              2            475
-#> 11 2022-08-19 [all]            7           1166
-#> 12 2022-08-19 200              1             51
-#> 13 2022-08-19 400              2            251
-#> 14 2022-08-19 600              2            382
-#> 15 2022-08-19 800              2            482
-#> 16 2022-08-25 [all]            7           1156
-#> 17 2022-08-25 200              1             52
-#> 18 2022-08-25 400              2            253
-#> 19 2022-08-25 600              2            391
-#> 20 2022-08-25 800              2            460
-
 d_date_margins <- d |> 
   group_by(date, interval_type) |> 
   summarise(
@@ -193,17 +159,19 @@ d_date_margins <- d |>
     .groups = "drop"
   )
 d_date_margins
-#> # A tibble: 8 × 5
-#>   date       interval_type intervals total_time distance
-#>   <date>     <chr>             <int>      <dbl>    <dbl>
-#> 1 2022-07-28 recover               7        778     3800
-#> 2 2022-07-28 run                   7       1232     3800
-#> 3 2022-08-16 recover               7       1231     3800
-#> 4 2022-08-16 run                   7       1181     3800
-#> 5 2022-08-19 recover               7        794     3800
-#> 6 2022-08-19 run                   7       1166     3800
-#> 7 2022-08-25 recover               7        904     3800
-#> 8 2022-08-25 run                   7       1156     3800
+#> # A tibble: 10 × 5
+#>    date       interval_type intervals total_time distance
+#>    <date>     <chr>             <int>      <dbl>    <dbl>
+#>  1 2022-07-28 recover               7        778     3800
+#>  2 2022-07-28 run                   7       1232     3800
+#>  3 2022-08-16 recover               7       1231     3800
+#>  4 2022-08-16 run                   7       1181     3800
+#>  5 2022-08-19 recover               7        794     3800
+#>  6 2022-08-19 run                   7       1166     3800
+#>  7 2022-08-25 recover               7        904     3800
+#>  8 2022-08-25 run                   7       1156     3800
+#>  9 2022-08-30 recover               7       1003     3800
+#> 10 2022-08-30 run                   7       1095     3800
 
 d |> 
   filter(interval_type == "run") |> 
@@ -246,6 +214,46 @@ d |>
 ``` r
 
 d |> 
+  filter(interval_type == "run") |> 
+  ggplot() + 
+    aes(
+      x = (interval_number + 1) / 2, 
+      y = (time) / (as.numeric(distance) / 200)
+    ) +
+    geom_line(aes(group = date, color = factor(date))) +
+    geom_point(aes(color = factor(date))) +
+    geom_label(
+      aes(
+        label = paste0(distance, " m"), 
+        y = 30
+      ), 
+      hjust = .5,
+      stat = "unique"
+    ) +
+    geom_label(
+      aes(label = label, y = 30),
+      data = data.frame(interval_number = 15, label = "(all)"),
+      hjust = .5,
+    ) +
+    geom_point(
+      aes(color = factor(date)), 
+      data = d_date_margins |> 
+        filter(interval_type == "run") |> 
+        mutate(interval_number = 15) |> 
+        rename(time = total_time),
+    ) +
+    labs(
+      x = "running interval number", 
+      y = "seconds per 200 m (lower: better)", 
+      color = "date"
+    )
+```
+
+![](README_files/figure-gfm/intervals-2.png)<!-- -->
+
+``` r
+
+d |> 
   filter(interval_type == "recover") |> 
   ggplot() + 
     aes(
@@ -270,7 +278,7 @@ d |>
     )
 ```
 
-![](README_files/figure-gfm/intervals-2.png)<!-- -->
+![](README_files/figure-gfm/intervals-3.png)<!-- -->
 
 ## bodyweight
 
@@ -307,8 +315,9 @@ library(ggrepel)
 p + 
   geom_vline(
     data = NULL,
-    linetype = "dotted",
-    xintercept = as.Date("2022-04-24")
+    linetype = "dashed",
+    xintercept = as.Date("2022-04-24"),
+    size = 1
   ) +
   geom_text_repel(
     data = data.frame(
@@ -360,24 +369,31 @@ p3 <- ggplot(data_minutes |> filter(date > as.Date("2022-01-01"))) +
   theme_grey(base_size = 16) + 
   geom_vline(
     data = NULL,
-    linetype = "dotted",
-    xintercept = as.Date("2022-04-24")
+    linetype = "dashed",
+    xintercept = as.Date("2022-04-24"),
+    size = 1
   ) +
   geom_blank(
     aes(x = max(c(data_minutes$date, data_weight$date)), y = 30),
   )
 ```
 
+Not happy with this, yet.
+
 ``` r
 library(patchwork)
-p2 + p3 + plot_layout(nrow = 2) 
+
+plot_spacer() + 
+  p3 + 
+  inset_element(
+    p2, 
+    left = 0.4, 
+    bottom = 1, 
+    right = 1, 
+    top = 1.8, 
+    align_to = "full"
+  ) + 
+  plot_layout(nrow = 2)
 ```
 
 ![](README_files/figure-gfm/bodyweight2-1.png)<!-- -->
-
-``` r
-
-plot_spacer() + p3 + inset_element(p2, left = 0.4, bottom = 1, right = 1, top = 1.8, align_to = "full") + plot_layout(nrow = 2)
-```
-
-![](README_files/figure-gfm/bodyweight2-2.png)<!-- -->
