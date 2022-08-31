@@ -101,7 +101,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    241          37.7     9083 -1853
+#> 5  2022    242          37.8     9155 -1895
 
 data_minutes |> 
   summarise(
@@ -113,7 +113,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1349          27.4    36951  3519
+#> 1   1350          27.4    37023  3477
 ```
 
 ## intervals
