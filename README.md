@@ -72,13 +72,30 @@ ggplot(data_minutes |> filter(year > 2018)) +
   aes(x = date, y = exercise_minutes) + 
   geom_hline(
     yintercept = 30, 
-    color = "darkgreen", 
+    color = "#92E82A", 
     size = 1, 
-    linetype = "dashed"
+    # linetype = "dashedblack"
   ) +
-  geom_point(alpha = .4) +
-  facet_wrap("year", scales = "free") + 
-  stat_smooth(method = "loess", formula = y ~ x)
+  geom_point(
+    data = function(x) filter(x, exercise_minutes < 125),
+    alpha = .4
+  ) +
+  geom_point(
+    aes(y = 125),
+    data = function(x) filter(x, exercise_minutes >= 125),
+    alpha = .4,
+    color = "orange"
+  ) +
+  facet_wrap("year", scales = "free_x") + 
+  stat_smooth(method = "loess", formula = y ~ x) +
+  scale_x_date(date_labels = "%b") +
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
+  labs(
+    x = "month",
+    y = "exercise activity minutes ⌚",
+    caption = "Outliers (125+ minutes) replaced with orange points."
+  ) +
+  theme_light(base_size = 16)
 ```
 
 ![](README_files/figure-gfm/exercise-minutes-1.png)<!-- -->
@@ -101,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    242          37.8     9155 -1895
+#> 5  2022    244          38.1     9297 -1977
 
 data_minutes |> 
   summarise(
@@ -113,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1350          27.4    37023  3477
+#> 1   1352          27.5    37165  3395
 ```
 
 ## intervals
