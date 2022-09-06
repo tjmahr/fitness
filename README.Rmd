@@ -132,6 +132,23 @@ data_minutes |>
   )
 ```
 
+My stupid Apple Fitness said my September 2022 challenge is 64 minutes of
+exercise activity per day on average, so let's make a query to check on that.
+
+```{r}
+data_minutes |> 
+  group_by(year, month) |> 
+  summarise(
+    num_days = n(),
+    mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
+    .groups = "drop"
+  ) |> 
+  ungroup() |> 
+  arrange(desc(year), desc(month)) |> 
+  slice_head(n = 10) |> 
+  knitr::kable(align = "lrrr")
+```
+
 
 ## intervals
 

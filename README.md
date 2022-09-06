@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    244          38.1     9297 -1977
+#> 5  2022    248          38.9     9639 -2199
 
 data_minutes |> 
   summarise(
@@ -130,8 +130,39 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1352          27.5    37165  3395
+#> 1   1356          27.7    37507  3173
 ```
+
+My stupid Apple Fitness said my September 2022 challenge is 64 minutes
+of exercise activity per day on average, so let’s make a query to check
+on that.
+
+``` r
+data_minutes |> 
+  group_by(year, month) |> 
+  summarise(
+    num_days = n(),
+    mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
+    .groups = "drop"
+  ) |> 
+  ungroup() |> 
+  arrange(desc(year), desc(month)) |> 
+  slice_head(n = 10) |> 
+  knitr::kable(align = "lrrr")
+```
+
+| year | month | num_days | mean_minutes |
+|:-----|------:|---------:|-------------:|
+| 2022 |     9 |        5 |         78.6 |
+| 2022 |     8 |       31 |         72.6 |
+| 2022 |     7 |       31 |         52.1 |
+| 2022 |     6 |       30 |         51.6 |
+| 2022 |     5 |       31 |         38.5 |
+| 2022 |     4 |       30 |         26.8 |
+| 2022 |     3 |       31 |         22.9 |
+| 2022 |     2 |       28 |         20.4 |
+| 2022 |     1 |       31 |         17.8 |
+| 2021 |    12 |       31 |         21.6 |
 
 ## intervals
 
@@ -176,7 +207,7 @@ d_date_margins <- d |>
     .groups = "drop"
   )
 d_date_margins
-#> # A tibble: 10 × 5
+#> # A tibble: 12 × 5
 #>    date       interval_type intervals total_time distance
 #>    <date>     <chr>             <int>      <dbl>    <dbl>
 #>  1 2022-07-28 recover               7        778     3800
@@ -189,6 +220,8 @@ d_date_margins
 #>  8 2022-08-25 run                   7       1156     3800
 #>  9 2022-08-30 recover               7       1003     3800
 #> 10 2022-08-30 run                   7       1095     3800
+#> 11 2022-09-06 recover               7        823     3800
+#> 12 2022-09-06 run                   7       1162     3800
 
 d |> 
   filter(interval_type == "run") |> 
