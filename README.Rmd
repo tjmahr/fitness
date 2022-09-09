@@ -304,7 +304,7 @@ data_weight <- "data/bodyweight.csv" |>
 p <- data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
-  ylim(250, 270) + 
+  ylim(245, 270) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
   theme_grey(base_size = 16) +

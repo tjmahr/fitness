@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    248          38.9     9639 -2199
+#> 5  2022    251          39.2     9851 -2321
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1356          27.7    37507  3173
+#> 1   1359          27.8    37719  3051
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -153,7 +153,7 @@ data_minutes |>
 
 | year | month | num_days | mean_minutes |
 |:-----|------:|---------:|-------------:|
-| 2022 |     9 |        5 |         78.6 |
+| 2022 |     9 |        8 |         75.6 |
 | 2022 |     8 |       31 |         72.6 |
 | 2022 |     7 |       31 |         52.1 |
 | 2022 |     6 |       30 |         51.6 |
@@ -347,7 +347,7 @@ data_weight <- "data/bodyweight.csv" |>
 p <- data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
-  ylim(250, 270) + 
+  ylim(245, 270) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
   theme_grey(base_size = 16) +
