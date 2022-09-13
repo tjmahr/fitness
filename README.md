@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    251          39.2     9851 -2321
+#> 5  2022    255          39.6    10092 -2442
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1359          27.8    37719  3051
+#> 1   1363          27.9    37960  2930
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -153,7 +153,7 @@ data_minutes |>
 
 | year | month | num_days | mean_minutes |
 |:-----|------:|---------:|-------------:|
-| 2022 |     9 |        8 |         75.6 |
+| 2022 |     9 |       12 |         70.5 |
 | 2022 |     8 |       31 |         72.6 |
 | 2022 |     7 |       31 |         52.1 |
 | 2022 |     6 |       30 |         51.6 |
