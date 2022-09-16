@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    255          39.6    10092 -2442
+#> 5  2022    258          40.2    10383 -2643
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1363          27.9    37960  2930
+#> 1   1366          28.0    38251  2729
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -139,30 +139,30 @@ on that.
 
 ``` r
 data_minutes |> 
+  filter(year == 2022) |> 
   group_by(year, month) |> 
   summarise(
     num_days = n(),
     mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
+    prop_of_sept_22_goal = (sum(exercise_minutes) / (64 * 30)) |> round(2),
     .groups = "drop"
   ) |> 
   ungroup() |> 
   arrange(desc(year), desc(month)) |> 
-  slice_head(n = 10) |> 
-  knitr::kable(align = "lrrr")
+  knitr::kable(align = "lrrrr")
 ```
 
-| year | month | num_days | mean_minutes |
-|:-----|------:|---------:|-------------:|
-| 2022 |     9 |       12 |         70.5 |
-| 2022 |     8 |       31 |         72.6 |
-| 2022 |     7 |       31 |         52.1 |
-| 2022 |     6 |       30 |         51.6 |
-| 2022 |     5 |       31 |         38.5 |
-| 2022 |     4 |       30 |         26.8 |
-| 2022 |     3 |       31 |         22.9 |
-| 2022 |     2 |       28 |         20.4 |
-| 2022 |     1 |       31 |         17.8 |
-| 2021 |    12 |       31 |         21.6 |
+| year | month | num_days | mean_minutes | prop_of_sept_22_goal |
+|:-----|------:|---------:|-------------:|---------------------:|
+| 2022 |     9 |       15 |         75.8 |                 0.59 |
+| 2022 |     8 |       31 |         72.6 |                 1.17 |
+| 2022 |     7 |       31 |         52.1 |                 0.84 |
+| 2022 |     6 |       30 |         51.6 |                 0.81 |
+| 2022 |     5 |       31 |         38.5 |                 0.62 |
+| 2022 |     4 |       30 |         26.8 |                 0.42 |
+| 2022 |     3 |       31 |         22.9 |                 0.37 |
+| 2022 |     2 |       28 |         20.4 |                 0.30 |
+| 2022 |     1 |       31 |         17.8 |                 0.29 |
 
 ## intervals
 
@@ -400,50 +400,8 @@ p +
 
 ![](README_files/figure-gfm/bodyweight-2.png)<!-- -->
 
-``` r
-  
-  
-p2 <- last_plot()
-
-p3 <- ggplot(data_minutes |> filter(date > as.Date("2022-01-01"))) + 
-  aes(x = date, y = exercise_minutes) + 
-  geom_hline(
-    yintercept = 30, 
-    color = "darkgreen", 
-    size = 1, 
-    linetype = "dashed"
-  ) +
-  geom_point(alpha = .4) +
-  stat_smooth(method = "loess", formula = y ~ x) +
-  labs(y = "Exercise minutes ⌚") + 
-  theme_grey(base_size = 16) + 
-  geom_vline(
-    data = NULL,
-    linetype = "dashed",
-    xintercept = as.Date("2022-04-24"),
-    size = 1
-  ) +
-  geom_blank(
-    aes(x = max(c(data_minutes$date, data_weight$date)), y = 30),
-  )
-```
-
-Not happy with this, yet.
-
-``` r
-library(patchwork)
-
-plot_spacer() + 
-  p3 + 
-  inset_element(
-    p2, 
-    left = 0.4, 
-    bottom = 1, 
-    right = 1, 
-    top = 1.8, 
-    align_to = "full"
-  ) + 
-  plot_layout(nrow = 2)
-```
-
-![](README_files/figure-gfm/bodyweight2-1.png)<!-- -->
+The last time I was on a months-long fitness kick, I did a Nike+ Run
+Club training program for a half-marathon. In a one-month period (July
+2015), I ran a half-marathon distance three times. My weight at that
+time was 234 lbs, so that’s the benchmark for Tristan, The Cardio
+Machine.

@@ -138,16 +138,17 @@ exercise activity per day on average, so let's make a query to check on that.
 
 ```{r}
 data_minutes |> 
+  filter(year == 2022) |> 
   group_by(year, month) |> 
   summarise(
     num_days = n(),
     mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
+    prop_of_sept_22_goal = (sum(exercise_minutes) / (64 * 30)) |> round(2),
     .groups = "drop"
   ) |> 
   ungroup() |> 
   arrange(desc(year), desc(month)) |> 
-  slice_head(n = 10) |> 
-  knitr::kable(align = "lrrr")
+  knitr::kable(align = "lrrrr")
 ```
 
 
@@ -350,48 +351,9 @@ p +
     aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
   )
   
-  
-p2 <- last_plot()
-
-p3 <- ggplot(data_minutes |> filter(date > as.Date("2022-01-01"))) + 
-  aes(x = date, y = exercise_minutes) + 
-  geom_hline(
-    yintercept = 30, 
-    color = "darkgreen", 
-    size = 1, 
-    linetype = "dashed"
-  ) +
-  geom_point(alpha = .4) +
-  stat_smooth(method = "loess", formula = y ~ x) +
-  labs(y = "Exercise minutes ⌚") + 
-  theme_grey(base_size = 16) + 
-  geom_vline(
-    data = NULL,
-    linetype = "dashed",
-    xintercept = as.Date("2022-04-24"),
-    size = 1
-  ) +
-  geom_blank(
-    aes(x = max(c(data_minutes$date, data_weight$date)), y = 30),
-  )
-
 ```
 
-Not happy with this, yet.
-
-```{r bodyweight2, fig.width = 10, fig.height = 8}
-library(patchwork)
-
-plot_spacer() + 
-  p3 + 
-  inset_element(
-    p2, 
-    left = 0.4, 
-    bottom = 1, 
-    right = 1, 
-    top = 1.8, 
-    align_to = "full"
-  ) + 
-  plot_layout(nrow = 2)
-```
-
+The last time I was on a months-long fitness kick, I did a Nike+ Run Club
+training program for a half-marathon. In a one-month period (July 2015), I ran a
+half-marathon distance three times. My weight at that time was 234 lbs, so
+that's the benchmark for Tristan, The Cardio Machine.
