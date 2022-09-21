@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    262          40.5    10622 -2762
+#> 5  2022    263          40.7    10695 -2805
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1370          28.1    38490  2610
+#> 1   1371          28.1    38563  2567
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -154,7 +154,7 @@ data_minutes |>
 
 | year | month | num_days | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|-------------:|---------------------:|
-| 2022 |     9 |       19 |         72.4 |                 0.72 |
+| 2022 |     9 |       20 |         72.4 |                 0.75 |
 | 2022 |     8 |       31 |         72.6 |                 1.17 |
 | 2022 |     7 |       31 |         52.1 |                 0.84 |
 | 2022 |     6 |       30 |         51.6 |                 0.81 |
@@ -350,11 +350,14 @@ data_weight <- "data/bodyweight.csv" |>
 p <- data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
-  ylim(245, 270) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
+  ylim(245, 270) + 
+  labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
-  labs(y = "bodyweight [lb]") 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
 
 p
 ```
@@ -365,13 +368,29 @@ p
 
 library(ggrepel)
 
-p + 
+data_weight |> 
+  ggplot() + 
+  aes(x = date, y = weight) + 
+  geom_hline(
+    yintercept = 250,
+    # linetype = "dashed",
+    size = 1.5,
+    color = "grey60"
+  ) +
   geom_vline(
-    data = NULL,
     linetype = "dashed",
     xintercept = as.Date("2022-04-24"),
-    size = 1
+    size = 1,
   ) +
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_point() +
+  ylim(245, 270) + 
+  labs(y = "bodyweight [lb]") +
+  theme_grey(base_size = 16) +
+  theme(
+    panel.grid.minor.y = element_blank()
+  ) +
+
   geom_text_repel(
     data = data.frame(
       date = as.Date("2022-04-25"),

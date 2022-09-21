@@ -309,23 +309,42 @@ data_weight <- "data/bodyweight.csv" |>
 p <- data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
-  ylim(245, 270) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
+  ylim(245, 270) + 
+  labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
-  labs(y = "bodyweight [lb]") 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
 
 p
 
 library(ggrepel)
 
-p + 
+data_weight |> 
+  ggplot() + 
+  aes(x = date, y = weight) + 
+  geom_hline(
+    yintercept = 250,
+    # linetype = "dashed",
+    size = 1.5,
+    color = "grey60"
+  ) +
   geom_vline(
-    data = NULL,
     linetype = "dashed",
     xintercept = as.Date("2022-04-24"),
-    size = 1
+    size = 1,
   ) +
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_point() +
+  ylim(245, 270) + 
+  labs(y = "bodyweight [lb]") +
+  theme_grey(base_size = 16) +
+  theme(
+    panel.grid.minor.y = element_blank()
+  ) +
+
   geom_text_repel(
     data = data.frame(
       date = as.Date("2022-04-25"),
