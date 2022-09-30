@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    263          40.7    10695 -2805
+#> 5  2022    272          41.9    11398 -3238
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1371          28.1    38563  2567
+#> 1   1380          28.5    39266  2134
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -143,6 +143,7 @@ data_minutes |>
   group_by(year, month) |> 
   summarise(
     num_days = n(),
+    sum_minutes = sum(exercise_minutes),
     mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
     prop_of_sept_22_goal = (sum(exercise_minutes) / (64 * 30)) |> round(2),
     .groups = "drop"
@@ -152,17 +153,17 @@ data_minutes |>
   knitr::kable(align = "lrrrr")
 ```
 
-| year | month | num_days | mean_minutes | prop_of_sept_22_goal |
-|:-----|------:|---------:|-------------:|---------------------:|
-| 2022 |     9 |       20 |         72.4 |                 0.75 |
-| 2022 |     8 |       31 |         72.6 |                 1.17 |
-| 2022 |     7 |       31 |         52.1 |                 0.84 |
-| 2022 |     6 |       30 |         51.6 |                 0.81 |
-| 2022 |     5 |       31 |         38.5 |                 0.62 |
-| 2022 |     4 |       30 |         26.8 |                 0.42 |
-| 2022 |     3 |       31 |         22.9 |                 0.37 |
-| 2022 |     2 |       28 |         20.4 |                 0.30 |
-| 2022 |     1 |       31 |         17.8 |                 0.29 |
+| year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
+|:-----|------:|---------:|------------:|-------------:|:---------------------|
+| 2022 |     9 |       29 |        2152 |         74.2 | 1.12                 |
+| 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
+| 2022 |     7 |       31 |        1616 |         52.1 | 0.84                 |
+| 2022 |     6 |       30 |        1548 |         51.6 | 0.81                 |
+| 2022 |     5 |       31 |        1194 |         38.5 | 0.62                 |
+| 2022 |     4 |       30 |         804 |         26.8 | 0.42                 |
+| 2022 |     3 |       31 |         710 |         22.9 | 0.37                 |
+| 2022 |     2 |       28 |         571 |         20.4 | 0.30                 |
+| 2022 |     1 |       31 |         552 |         17.8 | 0.29                 |
 
 ## intervals
 

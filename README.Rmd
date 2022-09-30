@@ -142,6 +142,7 @@ data_minutes |>
   group_by(year, month) |> 
   summarise(
     num_days = n(),
+    sum_minutes = sum(exercise_minutes),
     mean_minutes = scales::label_number(.1)(mean(exercise_minutes)),
     prop_of_sept_22_goal = (sum(exercise_minutes) / (64 * 30)) |> round(2),
     .groups = "drop"
