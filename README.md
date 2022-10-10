@@ -118,7 +118,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    272          41.9    11398 -3238
+#> 5  2022    282          43.2    12190 -3730
 
 data_minutes |> 
   summarise(
@@ -130,7 +130,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1380          28.5    39266  2134
+#> 1   1390          28.8    40058  1642
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -155,7 +155,8 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |     9 |       29 |        2152 |         74.2 | 1.12                 |
+| 2022 |    10 |        9 |         696 |         77.3 | 0.36                 |
+| 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
 | 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
 | 2022 |     7 |       31 |        1616 |         52.1 | 0.84                 |
 | 2022 |     6 |       30 |        1548 |         51.6 | 0.81                 |
@@ -164,6 +165,56 @@ data_minutes |>
 | 2022 |     3 |       31 |         710 |         22.9 | 0.37                 |
 | 2022 |     2 |       28 |         571 |         20.4 | 0.30                 |
 | 2022 |     1 |       31 |         552 |         17.8 | 0.29                 |
+
+## fast miles
+
+In September 2022, I started jogging my kid to preschool in a running
+stroller. School is just a little more than a mile away. After a few
+weeks, I decided to compete with myself for how fast I could run the
+first mile split on these jogs.
+
+``` r
+convert_min_sec_to_sec <- function(xs) {
+  # ye olde splitten applyen combinen
+  xs |> 
+    strsplit(split = ":", fixed = TRUE) |> 
+    lapply(function(x) {
+      x <- as.numeric(x)
+      60 * x[1] + x[2]
+    }) |> 
+    unlist(use.names = FALSE)
+}
+
+data_miles <- "data/miles-to-school.csv" |> 
+  # I added entries with Excel and it mangled the dates
+  read_csv(
+    col_types = cols(
+      date = col_date("%m/%d/%Y"), 
+      first_mile_split = "c",
+      comment = "c",
+    )
+  ) |> 
+  mutate(
+    time = convert_min_sec_to_sec(first_mile_split)
+  )
+
+ggplot(data_miles) + 
+  aes(x = date, y = time) +
+  geom_point(size = 3) +
+  scale_y_continuous(
+    breaks = (14:22 / 2) * 60,
+    labels = function(x) {
+      sprintf("%02d:%02d", x %/% 60, x %% 60)
+    }
+  ) +
+  labs(
+    x = "date", 
+    y = "pace [min per mi]"
+  ) +
+  theme_light(base_size = 16)
+```
+
+![](README_files/figure-gfm/fast-miles-1.png)<!-- -->
 
 ## intervals
 
@@ -177,18 +228,6 @@ of scared of this workout.
 
 ``` r
 library(tidyverse)
-
-convert_min_sec_to_sec <- function(xs) {
-  # ye olde splitten applyen combinen
-  xs |> 
-    strsplit(split = ":", fixed = TRUE) |> 
-    lapply(function(x) {
-      x <- as.numeric(x)
-      60 * x[1] + x[2]
-    }) |> 
-    unlist(use.names = FALSE)
-}
-
 d <- "data/intervals.csv" |> 
   read_csv(
     col_types = cols(

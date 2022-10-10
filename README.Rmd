@@ -152,6 +152,53 @@ data_minutes |>
   knitr::kable(align = "lrrrr")
 ```
 
+## fast miles
+
+In September 2022, I started jogging my kid to preschool in a running stroller.
+School is just a little more than a mile away. After a few weeks, I decided to
+compete with myself for how fast I could run the first mile split on these jogs.
+
+```{r fast-miles}
+convert_min_sec_to_sec <- function(xs) {
+  # ye olde splitten applyen combinen
+  xs |> 
+    strsplit(split = ":", fixed = TRUE) |> 
+    lapply(function(x) {
+      x <- as.numeric(x)
+      60 * x[1] + x[2]
+    }) |> 
+    unlist(use.names = FALSE)
+}
+
+data_miles <- "data/miles-to-school.csv" |> 
+  # I added entries with Excel and it mangled the dates
+  read_csv(
+    col_types = cols(
+      date = col_date("%m/%d/%Y"), 
+      first_mile_split = "c",
+      comment = "c",
+    )
+  ) |> 
+  mutate(
+    time = convert_min_sec_to_sec(first_mile_split)
+  )
+
+ggplot(data_miles) + 
+  aes(x = date, y = time) +
+  geom_point(size = 3) +
+  scale_y_continuous(
+    breaks = (14:22 / 2) * 60,
+    labels = function(x) {
+      sprintf("%02d:%02d", x %/% 60, x %% 60)
+    }
+  ) +
+  labs(
+    x = "date", 
+    y = "pace [min per mi]"
+  ) +
+  theme_light(base_size = 16)
+```
+
 
 ## intervals
 
@@ -164,18 +211,6 @@ scared of this workout.
 
 ```{r intervals, fig.width = 8, fig.height = 4}
 library(tidyverse)
-
-convert_min_sec_to_sec <- function(xs) {
-  # ye olde splitten applyen combinen
-  xs |> 
-    strsplit(split = ":", fixed = TRUE) |> 
-    lapply(function(x) {
-      x <- as.numeric(x)
-      60 * x[1] + x[2]
-    }) |> 
-    unlist(use.names = FALSE)
-}
-
 d <- "data/intervals.csv" |> 
   read_csv(
     col_types = cols(
