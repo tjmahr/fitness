@@ -60,6 +60,10 @@ nodes_summary |>
 
 Now, I have my exercise minutes for each day.
 
+I should disclose that I turn on an Apple workout on my watch when I mow the
+lawn, shovel snow, or do something mildly active like going for a walk with my
+family. 
+
 ```{r exercise-minutes, fig.height = 7}
 library(tidyverse)
 
@@ -88,7 +92,6 @@ ggplot(data_minutes |> filter(year > 2018)) +
     yintercept = 30, 
     color = "#92E82A", 
     size = 1, 
-    # linetype = "dashedblack"
   ) +
   geom_point(
     data = function(x) filter(x, exercise_minutes < 125),
@@ -391,7 +394,7 @@ data_weight |>
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
     label = "Started taking boxing classes in late April 🥊",
-    size = 5
+    size = 4.5
   ) +
   geom_text_repel(
     data = data.frame(
@@ -403,7 +406,7 @@ data_weight |>
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
     label = "Pre-pandemic weight was around 250 lbs",
-    size = 5
+    size = 4.5
   )  + 
   geom_blank(
     aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),

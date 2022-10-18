@@ -46,6 +46,10 @@ nodes_summary |>
 
 Now, I have my exercise minutes for each day.
 
+I should disclose that I turn on an Apple workout on my watch when I mow
+the lawn, shovel snow, or do something mildly active like going for a
+walk with my family.
+
 ``` r
 library(tidyverse)
 
@@ -74,7 +78,6 @@ ggplot(data_minutes |> filter(year > 2018)) +
     yintercept = 30, 
     color = "#92E82A", 
     size = 1, 
-    # linetype = "dashedblack"
   ) +
   geom_point(
     data = function(x) filter(x, exercise_minutes < 125),
@@ -118,7 +121,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    282          43.2    12190 -3730
+#> 5  2022    290          44.5    12894 -4194
 
 data_minutes |> 
   summarise(
@@ -130,7 +133,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1390          28.8    40058  1642
+#> 1   1398          29.2    40762  1178
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -155,7 +158,7 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    10 |        9 |         696 |         77.3 | 0.36                 |
+| 2022 |    10 |       17 |        1400 |         82.4 | 0.73                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
 | 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
 | 2022 |     7 |       31 |        1616 |         52.1 | 0.84                 |
@@ -441,7 +444,7 @@ data_weight |>
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
     label = "Started taking boxing classes in late April 🥊",
-    size = 5
+    size = 4.5
   ) +
   geom_text_repel(
     data = data.frame(
@@ -453,7 +456,7 @@ data_weight |>
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
     label = "Pre-pandemic weight was around 250 lbs",
-    size = 5
+    size = 4.5
   )  + 
   geom_blank(
     aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
