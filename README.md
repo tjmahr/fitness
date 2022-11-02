@@ -121,7 +121,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    293          44.8    13140 -4350
+#> 5  2022    305          45.5    13890 -4740
 
 data_minutes |> 
   summarise(
@@ -133,7 +133,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1401          29.3    41008  1022
+#> 1   1413          29.6    41758   632
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -158,7 +158,8 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    10 |       20 |        1646 |         82.3 | 0.86                 |
+| 2022 |    11 |        1 |          54 |         54.0 | 0.03                 |
+| 2022 |    10 |       31 |        2342 |         75.5 | 1.22                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
 | 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
 | 2022 |     7 |       31 |        1616 |         52.1 | 0.84                 |
@@ -395,7 +396,7 @@ p <- data_weight |>
   aes(x = date, y = weight) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(245, 270) + 
+  ylim(240, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -427,13 +428,12 @@ data_weight |>
   ) +
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(245, 270) + 
+  ylim(240, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
-    panel.grid.minor.y = element_blank()
+    # panel.grid.minor.y = element_blank()
   ) +
-
   geom_text_repel(
     data = data.frame(
       date = as.Date("2022-04-25"),
@@ -455,7 +455,7 @@ data_weight |>
     point.padding = 0.5,
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
-    label = "Pre-pandemic weight was around 250 lbs",
+    label = "Pre-pandemic weight around 250 lbs",
     size = 4.5
   )  + 
   geom_blank(
