@@ -77,7 +77,7 @@ ggplot(data_minutes |> filter(year > 2018)) +
   geom_hline(
     yintercept = 30, 
     color = "#92E82A", 
-    size = 1, 
+    linewidth = 1, 
   ) +
   geom_point(
     data = function(x) filter(x, exercise_minutes < 125),
@@ -121,7 +121,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    305          45.5    13890 -4740
+#> 5  2022    319          46.6    14853 -5283
 
 data_minutes |> 
   summarise(
@@ -133,7 +133,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1413          29.6    41758   632
+#> 1   1427          29.9    42721    89
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -158,7 +158,7 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    11 |        1 |          54 |         54.0 | 0.03                 |
+| 2022 |    11 |       15 |        1017 |         67.8 | 0.53                 |
 | 2022 |    10 |       31 |        2342 |         75.5 | 1.22                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
 | 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
@@ -222,10 +222,10 @@ ggplot(data_miles) +
 
 ## intervals
 
--   Run some distance as fast as you can (time it), stop and recover
-    until heartrate is 140 bpm (time how long the recovery takes).
--   Do this for the following distances (m): 800, 800, 600, 600, 400,
-    400, 200.
+- Run some distance as fast as you can (time it), stop and recover until
+  heartrate is 140 bpm (time how long the recovery takes).
+- Do this for the following distances (m): 800, 800, 600, 600, 400, 400,
+  200.
 
 I injured my knee doing the 200 m sprint on 2022-09-06 and now I’m kind
 of scared of this workout.
@@ -411,20 +411,20 @@ p
 ``` r
 
 library(ggrepel)
+#> Warning: package 'ggrepel' was built under R version 4.2.2
 
 data_weight |> 
   ggplot() + 
   aes(x = date, y = weight) + 
   geom_hline(
     yintercept = 250,
-    # linetype = "dashed",
-    size = 1.5,
+    linewidth = 1.5,
     color = "grey60"
   ) +
   geom_vline(
     linetype = "dashed",
     xintercept = as.Date("2022-04-24"),
-    size = 1,
+    linewidth = 1,
   ) +
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
