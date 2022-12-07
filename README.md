@@ -121,7 +121,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    319          46.6    14853 -5283
+#> 5  2022    340          48.1    16361 -6161
 
 data_minutes |> 
   summarise(
@@ -133,7 +133,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1427          29.9    42721    89
+#> 1   1448          30.5    44229  -789
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -158,7 +158,8 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    11 |       15 |        1017 |         67.8 | 0.53                 |
+| 2022 |    12 |        6 |         405 |         67.5 | 0.21                 |
+| 2022 |    11 |       30 |        2120 |         70.7 | 1.10                 |
 | 2022 |    10 |       31 |        2342 |         75.5 | 1.22                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
 | 2022 |     8 |       31 |        2251 |         72.6 | 1.17                 |
@@ -411,7 +412,6 @@ p
 ``` r
 
 library(ggrepel)
-#> Warning: package 'ggrepel' was built under R version 4.2.2
 
 data_weight |> 
   ggplot() + 
@@ -470,3 +470,11 @@ Club training program for a half-marathon. In a one-month period (July
 2015), I ran a half-marathon distance three times. My weight at that
 time was 234 lbs, so that’s the benchmark for Tristan, The Cardio
 Machine.
+
+------------------------------------------------------------------------
+
+Random notes
+
+11/25/2022 - got the cross-rope “get lean” weighted jump rope set
+
+12/5/2022 - increased my apple move goal from 860 to 940
