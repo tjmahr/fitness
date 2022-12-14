@@ -121,7 +121,7 @@ data_minutes |>
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    340          48.1    16361 -6161
+#> 5  2022    347          48.5    16813 -6403
 
 data_minutes |> 
   summarise(
@@ -133,7 +133,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1448          30.5    44229  -789
+#> 1   1455          30.7    44681 -1031
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -158,7 +158,7 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    12 |        6 |         405 |         67.5 | 0.21                 |
+| 2022 |    12 |       13 |         857 |         65.9 | 0.45                 |
 | 2022 |    11 |       30 |        2120 |         70.7 | 1.10                 |
 | 2022 |    10 |       31 |        2342 |         75.5 | 1.22                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
@@ -171,7 +171,110 @@ data_minutes |>
 | 2022 |     2 |       28 |         571 |         20.4 | 0.30                 |
 | 2022 |     1 |       31 |         552 |         17.8 | 0.29                 |
 
-## fast miles
+## bodyweight
+
+In April, I took up a new hobby: Weekly boxing classes. This new
+activity motivated me to be a little more active (closing my watch’s
+daily exercise goal more often or trying exercises that help for boxing
+conditioning). I started measuring my bodyweight around this time. I
+haven’t change my diet or anything like that, and I don’t have any
+weight goals besides getting back to my pre-pandemic bodyweight (250
+lbs).
+
+``` r
+data_weight <- "data/bodyweight.csv" |> 
+  read_csv(col_types = cols(date = col_date("%m/%d/%Y"))) 
+
+p <- data_weight |> 
+  ggplot() + 
+  aes(x = date, y = weight) + 
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_point() +
+  ylim(240, 270) + 
+  labs(y = "bodyweight [lb]") +
+  theme_grey(base_size = 16) +
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+
+p
+```
+
+![](README_files/figure-gfm/bodyweight-1.png)<!-- -->
+
+``` r
+
+library(ggrepel)
+
+data_weight |> 
+  ggplot() + 
+  aes(x = date, y = weight) + 
+  geom_hline(
+    yintercept = 250,
+    linewidth = 1.5,
+    color = "grey60"
+  ) +
+  geom_vline(
+    linetype = "dashed",
+    xintercept = as.Date("2022-04-24"),
+    linewidth = 1,
+  ) +
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_point() +
+  ylim(240, 270) + 
+  labs(y = "bodyweight [lb]") +
+  theme_grey(base_size = 16) +
+  theme(
+    # panel.grid.minor.y = element_blank()
+  ) +
+  geom_text_repel(
+    data = data.frame(
+      date = as.Date("2022-04-25"),
+      weight = 269
+    ),
+    nudge_y = .5,
+    point.padding = 0.2,
+    segment.curvature = 1e-20,
+    xlim = c(as.Date("2022-04-30"), NA),
+    label = "Started taking boxing classes in late April 🥊",
+    size = 4.5
+  ) +
+  geom_text_repel(
+    data = data.frame(
+      date = as.Date("2022-04-26"),
+      weight = 250
+    ),
+    nudge_y = 1,
+    point.padding = 0.5,
+    segment.curvature = 1e-20,
+    xlim = c(as.Date("2022-04-30"), NA),
+    label = "Pre-pandemic weight around 250 lbs",
+    size = 4.5
+  )  + 
+  geom_blank(
+    aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
+  )
+```
+
+![](README_files/figure-gfm/bodyweight-2.png)<!-- -->
+
+The last time I was on a months-long fitness kick, I did a Nike+ Run
+Club training program for a half-marathon. In a one-month period (July
+2015), I ran a half-marathon distance three times. My weight at that
+time was 234 lbs, so that’s the benchmark for Tristan, The Cardio
+Machine.
+
+------------------------------------------------------------------------
+
+Random notes
+
+11/25/2022 - got the cross-rope “get lean” weighted jump rope set
+
+12/5/2022 - increased my apple move goal from 860 to 940
+
+## archived/iced things
+
+### fast miles
 
 In September 2022, I started jogging my kid to preschool in a running
 stroller. School is just a little more than a mile away. After a few
@@ -221,7 +324,7 @@ ggplot(data_miles) +
 
 ![](README_files/figure-gfm/fast-miles-1.png)<!-- -->
 
-## intervals
+### intervals
 
 - Run some distance as fast as you can (time it), stop and recover until
   heartrate is 140 bpm (time how long the recovery takes).
@@ -377,104 +480,3 @@ d |>
 ```
 
 ![](README_files/figure-gfm/intervals-3.png)<!-- -->
-
-## bodyweight
-
-In April, I took up a new hobby: Weekly boxing classes. This new
-activity motivated me to be a little more active (closing my watch’s
-daily exercise goal more often or trying exercises that help for boxing
-conditioning). I started measuring my bodyweight around this time. I
-haven’t change my diet or anything like that, and I don’t have any
-weight goals besides getting back to my pre-pandemic bodyweight (250
-lbs).
-
-``` r
-data_weight <- "data/bodyweight.csv" |> 
-  read_csv(col_types = cols(date = col_date("%m/%d/%Y"))) 
-
-p <- data_weight |> 
-  ggplot() + 
-  aes(x = date, y = weight) + 
-  stat_smooth(method = "loess", formula = y ~ x) +
-  geom_point() +
-  ylim(240, 270) + 
-  labs(y = "bodyweight [lb]") +
-  theme_grey(base_size = 16) +
-  theme(
-    panel.grid.minor.y = element_blank()
-  )
-
-p
-```
-
-![](README_files/figure-gfm/bodyweight-1.png)<!-- -->
-
-``` r
-
-library(ggrepel)
-
-data_weight |> 
-  ggplot() + 
-  aes(x = date, y = weight) + 
-  geom_hline(
-    yintercept = 250,
-    linewidth = 1.5,
-    color = "grey60"
-  ) +
-  geom_vline(
-    linetype = "dashed",
-    xintercept = as.Date("2022-04-24"),
-    linewidth = 1,
-  ) +
-  stat_smooth(method = "loess", formula = y ~ x) +
-  geom_point() +
-  ylim(240, 270) + 
-  labs(y = "bodyweight [lb]") +
-  theme_grey(base_size = 16) +
-  theme(
-    # panel.grid.minor.y = element_blank()
-  ) +
-  geom_text_repel(
-    data = data.frame(
-      date = as.Date("2022-04-25"),
-      weight = 269
-    ),
-    nudge_y = .5,
-    point.padding = 0.2,
-    segment.curvature = 1e-20,
-    xlim = c(as.Date("2022-04-30"), NA),
-    label = "Started taking boxing classes in late April 🥊",
-    size = 4.5
-  ) +
-  geom_text_repel(
-    data = data.frame(
-      date = as.Date("2022-04-26"),
-      weight = 250
-    ),
-    nudge_y = 1,
-    point.padding = 0.5,
-    segment.curvature = 1e-20,
-    xlim = c(as.Date("2022-04-30"), NA),
-    label = "Pre-pandemic weight around 250 lbs",
-    size = 4.5
-  )  + 
-  geom_blank(
-    aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
-  )
-```
-
-![](README_files/figure-gfm/bodyweight-2.png)<!-- -->
-
-The last time I was on a months-long fitness kick, I did a Nike+ Run
-Club training program for a half-marathon. In a one-month period (July
-2015), I ran a half-marathon distance three times. My weight at that
-time was 234 lbs, so that’s the benchmark for Tristan, The Cardio
-Machine.
-
-------------------------------------------------------------------------
-
-Random notes
-
-11/25/2022 - got the cross-rope “get lean” weighted jump rope set
-
-12/5/2022 - increased my apple move goal from 860 to 940
