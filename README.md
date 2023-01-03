@@ -89,9 +89,16 @@ ggplot(data_minutes |> filter(year > 2018)) +
     alpha = .4,
     color = "orange"
   ) +
+  geom_blank(
+    data = tibble::tibble(
+      exercise_minutes = NA_real_,
+      date = as.Date("2023-12-31"),
+      year = 2023
+    )
+  ) +
   facet_wrap("year", scales = "free_x") + 
   stat_smooth(method = "loess", formula = y ~ x) +
-  scale_x_date(date_labels = "%b") +
+  scale_x_date(date_labels = "%b", date_minor_breaks = "1 months") +
   scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
   labs(
     x = "month",
@@ -99,6 +106,36 @@ ggplot(data_minutes |> filter(year > 2018)) +
     caption = "Outliers (125+ minutes) replaced with orange points."
   ) +
   theme_light(base_size = 16)
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : span too small. fewer data values than degrees of freedom.
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : at 19358
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : radius 2.5e-05
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : all data on boundary of neighborhood. make span bigger
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : pseudoinverse used at 19358
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : neighborhood radius 0.005
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : reciprocal condition number 1
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : at 19359
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : radius 2.5e-05
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : all data on boundary of neighborhood. make span bigger
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : There are other near singularities as well. 2.5e-05
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : zero-width neighborhood. make span bigger
+
+#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+#> parametric, : zero-width neighborhood. make span bigger
+#> Warning: Computation failed in `stat_smooth()`
+#> Caused by error in `predLoess()`:
+#> ! NA/NaN/Inf in foreign function call (arg 5)
 ```
 
 ![](README_files/figure-gfm/exercise-minutes-1.png)<!-- -->
@@ -114,14 +151,15 @@ data_minutes |>
     exercise = sum(exercise_minutes),
     debt = sum(30 - exercise_minutes)
   )
-#> # A tibble: 5 × 5
+#> # A tibble: 6 × 5
 #>    year n_days mean_exercise exercise  debt
 #>   <dbl>  <int>         <dbl>    <int> <dbl>
 #> 1  2018     12          24        288    72
 #> 2  2019    365          28.7    10461   489
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
-#> 5  2022    347          48.5    16813 -6403
+#> 5  2022    365          49.3    18003 -7053
+#> 6  2023      2          57        114   -54
 
 data_minutes |> 
   summarise(
@@ -133,7 +171,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1455          30.7    44681 -1031
+#> 1   1475          31.2    45985 -1735
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -158,7 +196,7 @@ data_minutes |>
 
 | year | month | num_days | sum_minutes | mean_minutes | prop_of_sept_22_goal |
 |:-----|------:|---------:|------------:|-------------:|:---------------------|
-| 2022 |    12 |       13 |         857 |         65.9 | 0.45                 |
+| 2022 |    12 |       31 |        2047 |         66.0 | 1.07                 |
 | 2022 |    11 |       30 |        2120 |         70.7 | 1.10                 |
 | 2022 |    10 |       31 |        2342 |         75.5 | 1.22                 |
 | 2022 |     9 |       30 |        2248 |         74.9 | 1.17                 |
@@ -248,7 +286,7 @@ data_weight |>
     point.padding = 0.5,
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
-    label = "Pre-pandemic weight around 250 lbs",
+    label = "Pre-pandemic weight\naround 250 lbs",
     size = 4.5
   )  + 
   geom_blank(
@@ -264,9 +302,7 @@ Club training program for a half-marathon. In a one-month period (July
 time was 234 lbs, so that’s the benchmark for Tristan, The Cardio
 Machine.
 
-------------------------------------------------------------------------
-
-Random notes
+## other notes
 
 11/25/2022 - got the cross-rope “get lean” weighted jump rope set
 

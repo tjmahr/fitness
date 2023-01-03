@@ -64,7 +64,7 @@ I should disclose that I turn on an Apple workout on my watch when I mow the
 lawn, shovel snow, or do something mildly active like going for a walk with my
 family. 
 
-```{r exercise-minutes, fig.height = 7}
+```{r exercise-minutes, fig.height = 7, fig.width = 10}
 library(tidyverse)
 
 data_minutes <- "data/exercise-minutes.csv" |> 
@@ -103,9 +103,16 @@ ggplot(data_minutes |> filter(year > 2018)) +
     alpha = .4,
     color = "orange"
   ) +
+  geom_blank(
+    data = tibble::tibble(
+      exercise_minutes = NA_real_,
+      date = as.Date("2023-12-31"),
+      year = 2023
+    )
+  ) +
   facet_wrap("year", scales = "free_x") + 
   stat_smooth(method = "loess", formula = y ~ x) +
-  scale_x_date(date_labels = "%b") +
+  scale_x_date(date_labels = "%b", date_minor_breaks = "1 months") +
   scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
   labs(
     x = "month",
@@ -226,7 +233,7 @@ data_weight |>
     point.padding = 0.5,
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
-    label = "Pre-pandemic weight around 250 lbs",
+    label = "Pre-pandemic weight\naround 250 lbs",
     size = 4.5
   )  + 
   geom_blank(
