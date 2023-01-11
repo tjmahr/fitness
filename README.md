@@ -106,36 +106,6 @@ ggplot(data_minutes |> filter(year > 2018)) +
     caption = "Outliers (125+ minutes) replaced with orange points."
   ) +
   theme_light(base_size = 16)
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : span too small. fewer data values than degrees of freedom.
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : at 19358
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : radius 2.5e-05
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : all data on boundary of neighborhood. make span bigger
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : pseudoinverse used at 19358
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : neighborhood radius 0.005
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : reciprocal condition number 1
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : at 19359
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : radius 2.5e-05
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : all data on boundary of neighborhood. make span bigger
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : There are other near singularities as well. 2.5e-05
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : zero-width neighborhood. make span bigger
-
-#> Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-#> parametric, : zero-width neighborhood. make span bigger
-#> Warning: Computation failed in `stat_smooth()`
-#> Caused by error in `predLoess()`:
-#> ! NA/NaN/Inf in foreign function call (arg 5)
 ```
 
 ![](README_files/figure-gfm/exercise-minutes-1.png)<!-- -->
@@ -159,7 +129,7 @@ data_minutes |>
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
 #> 5  2022    365          49.3    18003 -7053
-#> 6  2023      2          57        114   -54
+#> 6  2023     10          67.9      679  -379
 
 data_minutes |> 
   summarise(
@@ -171,7 +141,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1475          31.2    45985 -1735
+#> 1   1483          31.4    46550 -2060
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -282,7 +252,7 @@ data_weight |>
       date = as.Date("2022-04-26"),
       weight = 250
     ),
-    nudge_y = 1,
+    nudge_y = 0,
     point.padding = 0.5,
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),

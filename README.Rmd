@@ -229,7 +229,7 @@ data_weight |>
       date = as.Date("2022-04-26"),
       weight = 250
     ),
-    nudge_y = 1,
+    nudge_y = 0,
     point.padding = 0.5,
     segment.curvature = 1e-20,
     xlim = c(as.Date("2022-04-30"), NA),
