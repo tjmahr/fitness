@@ -110,6 +110,59 @@ ggplot(data_minutes |> filter(year > 2018)) +
 
 ![](README_files/figure-gfm/exercise-minutes-1.png)<!-- -->
 
+I think that the smoothing lines should be match up from facet to facet.
+Let’s figure out how to do that.
+
+``` r
+library(tidyverse)
+
+gam <- mgcv::gam(
+  exercise_minutes ~ s(as.numeric(date), bs = "cr"), 
+  data = data_minutes
+)
+data_gam <- gratia::fitted_values(gam, data = data_minutes)
+
+ggplot(data_gam |> filter(year > 2018)) + 
+  aes(x = date, y = exercise_minutes) + 
+  geom_hline(
+    yintercept = 30, 
+    color = "#92E82A", 
+    linewidth = 1, 
+  ) +
+  geom_point(
+    data = function(x) filter(x, exercise_minutes < 125),
+    alpha = .4
+  ) +
+  geom_point(
+    aes(y = 125),
+    data = function(x) filter(x, exercise_minutes >= 125),
+    alpha = .4,
+    color = "orange"
+  ) +
+  geom_blank(
+    data = tibble::tibble(
+      exercise_minutes = NA_real_,
+      date = as.Date("2023-12-31"),
+      year = 2023
+    )
+  ) +
+  geom_smooth(
+    aes(y = fitted, ymin = lower, ymax = upper),
+    stat = "identity"
+  ) +
+  facet_wrap("year", scales = "free_x") + 
+  scale_x_date(date_labels = "%b", date_minor_breaks = "1 months") +
+  scale_y_continuous(breaks = c(0, 30, 60, 90, 120)) +
+  labs(
+    x = "month",
+    y = "exercise activity minutes ⌚",
+    caption = "Outliers (125+ minutes) replaced with orange points."
+  ) +
+  theme_light(base_size = 16)
+```
+
+![](README_files/figure-gfm/exercise-minutes-2-1.png)<!-- -->
+
 What is my exercise debt (unmet goal minutes)?
 
 ``` r
@@ -129,7 +182,7 @@ data_minutes |>
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
 #> 5  2022    365          49.3    18003 -7053
-#> 6  2023     10          67.9      679  -379
+#> 6  2023     58          66.1     3833 -2093
 
 data_minutes |> 
   summarise(
@@ -141,7 +194,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1483          31.4    46550 -2060
+#> 1   1531          32.5    49704 -3774
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -198,7 +251,7 @@ p <- data_weight |>
   aes(x = date, y = weight) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(240, 270) + 
+  ylim(235, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -229,7 +282,7 @@ data_weight |>
   ) +
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(240, 270) + 
+  ylim(235, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -277,6 +330,13 @@ Machine.
 11/25/2022 - got the cross-rope “get lean” weighted jump rope set
 
 12/5/2022 - increased my apple move goal from 860 to 940
+
+01/10/2023 - decreased my apple move goal to 500 because of a family
+vacation and procedure. started bumping it back up in 02/2023.
+
+02/20/2023 - started doing intermittent fasting on weekdays. basically,
+this kept me from eating peanut butter before bed or in the middle of
+the night.
 
 ## archived/iced things
 
