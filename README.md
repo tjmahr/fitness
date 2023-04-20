@@ -182,7 +182,7 @@ data_minutes |>
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
 #> 5  2022    365          49.3    18003 -7053
-#> 6  2023     58          66.1     3833 -2093
+#> 6  2023    109          65.1     7101 -3831
 
 data_minutes |> 
   summarise(
@@ -194,7 +194,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1531          32.5    49704 -3774
+#> 1   1582          33.5    52972 -5512
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -251,7 +251,7 @@ p <- data_weight |>
   aes(x = date, y = weight) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(235, 270) + 
+  ylim(225, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -282,7 +282,7 @@ data_weight |>
   ) +
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(235, 270) + 
+  ylim(225, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -318,6 +318,38 @@ data_weight |>
 ```
 
 ![](README_files/figure-gfm/bodyweight-2.png)<!-- -->
+
+``` r
+
+# A version with only interesting jumps in weight
+last_plot() +
+  list(data_weight |> filter(abs(weight - lead(weight)) >= 1))
+```
+
+![](README_files/figure-gfm/bodyweight-3.png)<!-- -->
+
+``` r
+
+  # list()
+# last_plot() + 
+#   geom_vline(
+#     linetype = "dashed",
+#     xintercept = as.Date("2023-02-16"),
+#     linewidth = 1,
+#   ) +
+#   geom_text_repel(
+#     data = data.frame(
+#       date = as.Date("2023-02-20"),
+#       weight = 257
+#     ),
+#     nudge_y = .5,
+#     point.padding = 0.2,
+#     segment.curvature = 1e-20,
+#     xlim = c(as.Date("2023-02-20"), NA),
+#     label = "Intermittent fasting\non weekdays",
+#     size = 3.5
+#   ) 
+```
 
 The last time I was on a months-long fitness kick, I did a Nike+ Run
 Club training program for a half-marathon. In a one-month period (July

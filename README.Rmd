@@ -234,7 +234,7 @@ p <- data_weight |>
   aes(x = date, y = weight) + 
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(235, 270) + 
+  ylim(225, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -260,7 +260,7 @@ data_weight |>
   ) +
   stat_smooth(method = "loess", formula = y ~ x) +
   geom_point() +
-  ylim(235, 270) + 
+  ylim(225, 270) + 
   labs(y = "bodyweight [lb]") +
   theme_grey(base_size = 16) +
   theme(
@@ -293,7 +293,30 @@ data_weight |>
   geom_blank(
     aes(x = max(c(data_minutes$date, data_weight$date)), y = 260),
   )
-  
+
+# A version with only interesting jumps in weight
+last_plot() +
+  list(data_weight |> filter(abs(weight - lead(weight)) >= 1))
+
+  # list()
+# last_plot() + 
+#   geom_vline(
+#     linetype = "dashed",
+#     xintercept = as.Date("2023-02-16"),
+#     linewidth = 1,
+#   ) +
+#   geom_text_repel(
+#     data = data.frame(
+#       date = as.Date("2023-02-20"),
+#       weight = 257
+#     ),
+#     nudge_y = .5,
+#     point.padding = 0.2,
+#     segment.curvature = 1e-20,
+#     xlim = c(as.Date("2023-02-20"), NA),
+#     label = "Intermittent fasting\non weekdays",
+#     size = 3.5
+#   ) 
 ```
 
 The last time I was on a months-long fitness kick, I did a Nike+ Run Club
