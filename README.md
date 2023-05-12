@@ -398,6 +398,7 @@ data_miles <- "data/miles-to-school.csv" |>
       date = col_date("%m/%d/%Y"), 
       first_mile_split = "c",
       comment = "c",
+      season = "n"
     )
   ) |> 
   mutate(
@@ -417,7 +418,9 @@ ggplot(data_miles) +
     x = "date", 
     y = "pace [min per mi]"
   ) +
-  theme_light(base_size = 16)
+  facet_wrap("season", labeller = label_both, scales = "free_x") +
+  theme_light(base_size = 16) +
+  ggtitle("How fast I ran 1 mile, running my kid to school")
 ```
 
 ![](README_files/figure-gfm/fast-miles-1.png)<!-- -->
