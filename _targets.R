@@ -29,5 +29,20 @@ list(
     "data/exercise-minutes.csv",
     readr::read_csv(!! .x)
   ),
+  tar_file_read(
+    data_intervals,
+    "data/intervals.csv",
+    readr::read_csv(!! .x)
+  ),
+  tar_file_read(
+    data_bodyweight,
+    "data/bodyweight.csv",
+    readr::read_csv(!! .x)
+  ),
+  tar_file_read(
+    data_miles_to_school,
+    "data/miles-to-school.csv",
+    readr::read_csv(!! .x)
+  ),
   tar_render(readme, "README.Rmd")
 )

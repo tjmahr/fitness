@@ -60,6 +60,7 @@ data_minutes <- "data/exercise-minutes.csv" |>
       date = col_date("%m/%d/%Y"), 
       exercise_minutes = "i")
   ) |> 
+  filter(!is.na(exercise_minutes)) |> 
   # in case i want to aggregate by months within years
   mutate(
     year = lubridate::year(date),
@@ -114,8 +115,6 @@ I think that the smoothing lines should be match up from facet to facet.
 Let’s figure out how to do that.
 
 ``` r
-library(tidyverse)
-
 gam <- mgcv::gam(
   exercise_minutes ~ s(as.numeric(date), bs = "cr"), 
   data = data_minutes
@@ -182,7 +181,7 @@ data_minutes |>
 #> 3  2020    366          23.0     8421  2559
 #> 4  2021    365          23.8     8698  2252
 #> 5  2022    365          49.3    18003 -7053
-#> 6  2023    109          65.1     7101 -3831
+#> 6  2023    135          65.8     8879 -4829
 
 data_minutes |> 
   summarise(
@@ -194,7 +193,7 @@ data_minutes |>
 #> # A tibble: 1 × 4
 #>   n_days mean_exercise exercise  debt
 #>    <int>         <dbl>    <int> <dbl>
-#> 1   1582          33.5    52972 -5512
+#> 1   1608          34.0    54750 -6510
 ```
 
 My stupid Apple Fitness said my September 2022 challenge is 64 minutes
@@ -370,8 +369,6 @@ vacation and procedure. started bumping it back up in 02/2023.
 this kept me from eating peanut butter before bed or in the middle of
 the night.
 
-## archived/iced things
-
 ### fast miles
 
 In September 2022, I started jogging my kid to preschool in a running
@@ -405,9 +402,21 @@ data_miles <- "data/miles-to-school.csv" |>
     time = convert_min_sec_to_sec(first_mile_split)
   )
 
-ggplot(data_miles) + 
+ggplot(data_miles) +
   aes(x = date, y = time) +
   geom_point(size = 3) +
+  # add some extra spacing in panel as we wait for data
+  geom_blank(
+    data = data.frame(
+      season = 2, 
+      date = as.Date("2023-06-15"), 
+      time = 450
+    )
+  ) +
+  scale_x_date(
+    date_breaks = "2 weeks",
+    date_labels = "%b %d"
+  ) +
   scale_y_continuous(
     breaks = (14:22 / 2) * 60,
     labels = function(x) {
@@ -415,15 +424,17 @@ ggplot(data_miles) +
     }
   ) +
   labs(
-    x = "date", 
+    x = NULL, 
     y = "pace [min per mi]"
   ) +
   facet_wrap("season", labeller = label_both, scales = "free_x") +
-  theme_light(base_size = 16) +
+  theme_light(base_size = 11) +
   ggtitle("How fast I ran 1 mile, running my kid to school")
 ```
 
 ![](README_files/figure-gfm/fast-miles-1.png)<!-- -->
+
+## archived/iced things
 
 ### intervals
 

@@ -15,7 +15,10 @@ knitr::opts_chunk$set(
 )
 # these are fake-ish targets to force a dependence between the data and 
 # the README
-targets::tar_read(data_exercise)
+targets::tar_load(data_exercise)
+targets::tar_load(data_intervals)
+targets::tar_load(data_miles_to_schools)
+targets::tar_load(data_bodyweight)
 ```
 
 # fitness
@@ -77,6 +80,7 @@ data_minutes <- "data/exercise-minutes.csv" |>
       date = col_date("%m/%d/%Y"), 
       exercise_minutes = "i")
   ) |> 
+  filter(!is.na(exercise_minutes)) |> 
   # in case i want to aggregate by months within years
   mutate(
     year = lubridate::year(date),
@@ -129,8 +133,6 @@ I think that the smoothing lines should be match up from facet to facet. Let's
 figure out how to do that.
 
 ```{r exercise-minutes-2, fig.height = 7, fig.width = 10}
-library(tidyverse)
-
 gam <- mgcv::gam(
   exercise_minutes ~ s(as.numeric(date), bs = "cr"), 
   data = data_minutes
@@ -342,7 +344,6 @@ kept me from eating peanut butter before bed or in the middle of the night.
 
 
 
-## archived/iced things
 
 ### fast miles
 
@@ -350,7 +351,7 @@ In September 2022, I started jogging my kid to preschool in a running stroller.
 School is just a little more than a mile away. After a few weeks, I decided to
 compete with myself for how fast I could run the first mile split on these jogs.
 
-```{r fast-miles}
+```{r fast-miles, fig.width = 6, fig.height = 3}
 convert_min_sec_to_sec <- function(xs) {
   # ye olde splitten applyen combinen
   xs |> 
@@ -376,9 +377,21 @@ data_miles <- "data/miles-to-school.csv" |>
     time = convert_min_sec_to_sec(first_mile_split)
   )
 
-ggplot(data_miles) + 
+ggplot(data_miles) +
   aes(x = date, y = time) +
   geom_point(size = 3) +
+  # add some extra spacing in panel as we wait for data
+  geom_blank(
+    data = data.frame(
+      season = 2, 
+      date = as.Date("2023-06-15"), 
+      time = 450
+    )
+  ) +
+  scale_x_date(
+    date_breaks = "2 weeks",
+    date_labels = "%b %d"
+  ) +
   scale_y_continuous(
     breaks = (14:22 / 2) * 60,
     labels = function(x) {
@@ -386,13 +399,16 @@ ggplot(data_miles) +
     }
   ) +
   labs(
-    x = "date", 
+    x = NULL, 
     y = "pace [min per mi]"
   ) +
   facet_wrap("season", labeller = label_both, scales = "free_x") +
-  theme_light(base_size = 16) +
+  theme_light(base_size = 11) +
   ggtitle("How fast I ran 1 mile, running my kid to school")
 ```
+
+
+## archived/iced things
 
 
 ### intervals
