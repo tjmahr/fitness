@@ -13,6 +13,9 @@ knitr::opts_chunk$set(
   dpi = 300, 
   dev = "ragg_png"
 )
+# these are fake-ish targets to force a dependence between the data and 
+# the README
+targets::tar_read(data_exercise)
 ```
 
 # fitness

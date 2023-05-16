@@ -1,0 +1,4 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+data_exercise|stem|19c7b4bfbbb0e640|a7bb2eb22f203423|540660825fb8ca54|-1209417892||t19493.7692917452s|6b23643dac1f8954|6375|rds|local|vector|||0.24||
+data_exercise_file|stem|6efe57b954b49154|a31bdb72fb7595f8|ef46db3751d8e999|-124661538|data/exercise-minutes.csv|t19467.838782609s|a026c00978582be4|22123|file|local|vector|||0||
+readme|stem|920994a82af352e2|99b4ea21a326c7ff|668f90e2532fb7e2|-165896733|README.md*README.Rmd*README_files|t19493.7709416555s|e2ffb14739a29dff|3945256|file|local|vector|||8.13||
