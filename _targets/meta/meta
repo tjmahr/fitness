@@ -1,10 +1,10 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-data_bodyweight|stem|0d48ea7fdf9c2157|4478b7b7cf8a2c3c|8aace82cccf3e8b8|-501892392||t19493.7920825635s|a0a657e67e0d9548|1248|rds|local|vector|||0.42||
-data_bodyweight_file|stem|c28da1b13172badd|7fedd58ca547d2a6|ef46db3751d8e999|-704161180|data/bodyweight.csv|t19493.7920524368s|aad32f917c4fe064|3261|file|local|vector|||0||
-data_exercise|stem|6c8d0ce302e68cc5|a7bb2eb22f203423|a80be696bad4895f|-1209417892||t19493.7981746968s|e36a6fe9c3ba048e|6528|rds|local|vector|||0.42||
-data_exercise_file|stem|8e9c27945d046812|a31bdb72fb7595f8|ef46db3751d8e999|-124661538|data/exercise-minutes.csv|t19493.7981433869s|7c65bbc4228694b7|22681|file|local|vector|||0.02||
-data_intervals|stem|0e18ce94a2cd4ce8|e0576f05b4fca8fb|ac4bde3f2038b99b|713038640||t19493.7791779785s|c18970d51cde3157|1045|rds|local|vector|||0.05||
-data_intervals_file|stem|dd7ec4b2ca7354f6|64ac67356642be23|ef46db3751d8e999|-969151870|data/intervals.csv|t19242.8197081893s|0f08a7d1c459c399|2866|file|local|vector|||0||
-data_miles_to_school|stem|e7972c89d11de1cc|207c3067b5dfcf9a|abe33800274d5e9e|-1324935975||t19493.7791762576s|01b7a81a966e4389|1026|rds|local|vector|||0.41||
-data_miles_to_school_file|stem|e8b3b13a9b55322a|776ed20b4e79ed8d|ef46db3751d8e999|-95439003|data/miles-to-school.csv|t19493.7790821915s|052f3dabfd21ecbb|1309|file|local|vector|||0.01||
-readme|stem|d1ae70cc7d1b3fbd|654cdd93bdf9511b|d95b8d7e6438c899|-165896733|README.md*README.Rmd*README_files|t19493.803904383s|23567b7f5f5a7de5|3942332|file|local|vector|||7.98||
+data_bodyweight|stem|0d48ea7fdf9c2157|4478b7b7cf8a2c3c|8aace82cccf3e8b8|-501892392||t19530.7985496194s|a0a657e67e0d9548|1248|rds|local|vector|||0.11||
+data_bodyweight_file|stem|c28da1b13172badd|7fedd58ca547d2a6|ef46db3751d8e999|-704161180|data/bodyweight.csv|t19494.5551852306s|aad32f917c4fe064|3261|file|local|vector|||0||
+data_exercise|stem|6c8d0ce302e68cc5|a7bb2eb22f203423|a80be696bad4895f|-1209417892||t19530.7985463702s|e36a6fe9c3ba048e|6528|rds|local|vector|||0.44||
+data_exercise_file|stem|8e9c27945d046812|a31bdb72fb7595f8|ef46db3751d8e999|-124661538|data/exercise-minutes.csv|t19494.5551852421s|7c65bbc4228694b7|22681|file|local|vector|||0.02||
+data_intervals|stem|0e18ce94a2cd4ce8|e0576f05b4fca8fb|ac4bde3f2038b99b|713038640||t19530.798551181s|c18970d51cde3157|1045|rds|local|vector|||0.13||
+data_intervals_file|stem|dd7ec4b2ca7354f6|64ac67356642be23|ef46db3751d8e999|-969151870|data/intervals.csv|t19241.8031411711s|0f08a7d1c459c399|2866|file|local|vector|||0||
+data_miles_to_school|stem|ebf46e453318682f|207c3067b5dfcf9a|0d6daefbf9dc41aa|-1324935975||t19530.7985480769s|fc4b69ad84fd3074|1136|rds|local|vector|||0.14||
+data_miles_to_school_file|stem|179753e76588b93e|776ed20b4e79ed8d|ef46db3751d8e999|-95439003|data/miles-to-school.csv|t19530.7981019292s|8f6862123577b747|1668|file|local|vector|||0|package tibble was built under R version 4.3.1|
+readme|stem|2df230e8f50b9359|654cdd93bdf9511b|d95b8d7e6438c899|-165896733|README.md*README.Rmd*README_files|t19530.798679887s|e9260cc17b5c7706|4027198|file|local|vector|||11.48||

@@ -375,6 +375,10 @@ data_miles <- "data/miles-to-school.csv" |>
   ) |> 
   mutate(
     time = convert_min_sec_to_sec(first_mile_split)
+  ) |> 
+  filter(
+    str_detect(tolower(comment), "injured", negate = TRUE),
+    str_detect(tolower(comment), "under the weather", negate = TRUE),
   )
 
 ggplot(data_miles) +
@@ -404,7 +408,7 @@ ggplot(data_miles) +
   ) +
   facet_wrap("season", labeller = label_both, scales = "free_x") +
   theme_light(base_size = 11) +
-  ggtitle("How fast I ran 1 mile, running my kid to school")
+  ggtitle("🏃‍♂️ How fast I ran 1 mile, running my kid to school 🎒")
 ```
 
 
